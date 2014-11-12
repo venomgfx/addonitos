@@ -1,11 +1,11 @@
 # GPL blahblah do whatever you want with this
 bl_info = {
-    "name": "Go to Next/Previous Scene",
-    "author": "Pablo Vazquez",
-    "version": (0, 1),
+    "name": "Jump to Next/Previous Scene",
+    "author": "Pablo Vazquez, Dalai Felinto",
+    "version": (0, 2),
     "blender": (2, 72),
     "location": "Scene Properties > Scene, or press Ctrl+Shift+Left/Right",
-    "description": "Go to the next/previous scene",
+    "description": "Easily jump to the next or previous scenes",
     "category": "Scene"}
 
 
@@ -15,12 +15,15 @@ from bpy.props import BoolProperty
 
 
 class SCENE_OT_stroll(Operator):
-    '''Go to the next/previous scene'''
+    '''Jump to the next or previous scene'''
     bl_idname = "scene.stroll"
-    bl_label = "Scene Next / Previous"
+    bl_label = "Jump to Next Scene"
+    bl_options = {'REGISTER', 'UNDO'}
 
     next = BoolProperty(
         default=True,
+        name="Next Scene",
+        description="Disable to jump to previous scene",
         options={'SKIP_SAVE'},
         )
 
@@ -43,7 +46,7 @@ class SCENE_OT_stroll(Operator):
         return {'FINISHED'}
 
     def error(self):
-        self.report({"INFO"}, "No other scenes to go to")
+        self.report({"INFO"}, "No more scenes to go to")
         return {'CANCELLED'}
 
 
