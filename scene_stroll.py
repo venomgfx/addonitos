@@ -8,41 +8,44 @@ bl_info = {
     "description": "Go to the next/previous scene",
     "category": "Scene"}
 
+
 import bpy
 from bpy.types import Operator
 from bpy.props import BoolProperty
+
 
 class SCENE_OT_stroll(Operator):
     '''Go to the next/previous scene'''
     bl_idname = "scene.stroll"
     bl_label = "Scene Next / Previous"
 
-    next = BoolProperty(default=True)
+    next = BoolProperty(
+        default=True,
+        options={'SKIP_SAVE'},
+        )
 
     def execute(self, context):
+        scenes = bpy.data.scenes
 
         # Only go if we have more than 1 scene
-        if len(bpy.data.scenes) > 1:
-            # This is extremely stupid. Really, a 5 years old would find
-            # a better way to do it. We go from 0 to the number of scenes
-            # we have, then if N is the same as the current one, save N
-            for n in range(0, len(bpy.data.scenes)):
-                if bpy.context.scene.name == bpy.data.scenes[n].name:
-                    break
+        if scenes[0] != scenes[-1]:
 
-            if self.next:
-                n += 1
-            else:
-                n -= 1
+            scene_id = scenes.find(context.scene.name)
+            scene_id += 1 if self.next else -1
 
-            try:
-                bpy.context.screen.scene = bpy.data.scenes[n]
-            except:
-                bpy.context.screen.scene = bpy.data.scenes[0]
+            if scene_id < 0 or scene_id == len(scenes):
+                return self.error()
+
+            bpy.context.screen.scene = scenes[scene_id]
         else:
-            self.report({"INFO"}, "No other scenes to go to")
+            return self.error()
 
         return {'FINISHED'}
+
+    def error(self):
+        self.report({"INFO"}, "No other scenes to go to")
+        return {'CANCELLED'}
+
 
 def scene_stroll_ui(self, context):
 
@@ -64,7 +67,7 @@ def scene_stroll_ui(self, context):
     row.operator(
         SCENE_OT_stroll.bl_idname,
         text="Next",
-        icon='FORWARD').next=True
+        icon='FORWARD')
 
 addon_keymaps = []
 
