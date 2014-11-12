@@ -29,9 +29,8 @@ class SCENE_OT_stroll(Operator):
 
         # Only go if we have more than 1 scene
         if scenes[0] != scenes[-1]:
-            scene = context.scene
 
-            scene_id = scenes.find(scene.name)
+            scene_id = scenes.find(context.scene.name)
             scene_id += 1 if self.next else -1
 
             if scene_id < 0 or scene_id == len(scenes):
