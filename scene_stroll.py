@@ -82,7 +82,9 @@ def register():
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     if kc:
-        km = kc.keymaps.new(name='Window')
+        km = kc.keymaps.get('Window')
+        if not km:
+            km = kc.keymaps.new(name='Window')
 
         kmi = km.keymap_items.new('scene.stroll', 'LEFT_ARROW', 'PRESS', shift=True, ctrl=True)
         kmi.properties.next = False
