@@ -72,6 +72,7 @@ def scene_stroll_ui(self, context):
         text="Next",
         icon='FORWARD')
 
+
 addon_keymaps = []
 
 def register():
@@ -82,20 +83,24 @@ def register():
     kc = wm.keyconfigs.addon
     if kc:
         km = kc.keymaps.new(name='Window')
+
         kmi = km.keymap_items.new('scene.stroll', 'LEFT_ARROW', 'PRESS', shift=True, ctrl=True)
         kmi.properties.next = False
-        kmi = km.keymap_items.new('scene.stroll', 'RIGHT_ARROW', 'PRESS', shift=True, ctrl=True)
-        kmi.properties.next = True
-
         addon_keymaps.append((km, kmi))
 
-def unregister():
-    bpy.utils.unregister_class(SCENE_OT_stroll)
-    bpy.types.SCENE_PT_scene.remove(scene_stroll_ui)
+        kmi = km.keymap_items.new('scene.stroll', 'RIGHT_ARROW', 'PRESS', shift=True, ctrl=True)
+        kmi.properties.next = True
+        addon_keymaps.append((km, kmi))
 
+
+def unregister():
     for km, kmi in addon_keymaps:
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
+
+    bpy.types.SCENE_PT_scene.remove(scene_stroll_ui)
+    bpy.utils.unregister_class(SCENE_OT_stroll)
+
 
 if __name__ == "__main__":
     register()
