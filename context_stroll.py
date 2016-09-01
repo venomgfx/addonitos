@@ -14,7 +14,7 @@ from bpy.types import Operator
 from bpy.props import BoolProperty
 
 
-class SCENE_OT_stroll(Operator):
+class SCENE_OT_context_stroll(Operator):
     '''Jump to the next or previous scene'''
     bl_idname = "screen.context_stroll"
     bl_label = "Jump to Next/Previous Context"
@@ -47,22 +47,26 @@ class SCENE_OT_stroll(Operator):
                     'PHYSICS']
 
 
+        # Only if we are in the properties editor
         if space.type == 'PROPERTIES':
             context_current = contexts.index(space.context)
             context_go = (context_current + 1) if self.next else (context_current - 1)
 
+            # First try if the context we want to go to is available
             try:
                 space.context = contexts[context_go]
             except:
+                # Oops! Not found, lets move to the next or previous
                 found = False
                 context_go += 1 if self.next else -1
 
                 while found is False:
                     try:
+                        # Success!
                         space.context = contexts[context_go]
                         found = True
                     except:
-                        # If we reach the end, go to the beginning
+                        # Nope, keep trying. If we reach the end, start again
                         if context_go < len(contexts):
                             context_go += 1 if self.next else -1
                         else:
@@ -75,7 +79,7 @@ class SCENE_OT_stroll(Operator):
 addon_keymaps = []
 
 def register():
-    bpy.utils.register_class(SCENE_OT_stroll)
+    bpy.utils.register_class(SCENE_OT_context_stroll)
 
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
@@ -98,7 +102,7 @@ def unregister():
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
 
-    bpy.utils.unregister_class(SCENE_OT_stroll)
+    bpy.utils.unregister_class(SCENE_OT_context_stroll)
 
 
 if __name__ == "__main__":
