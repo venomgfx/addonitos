@@ -2,8 +2,8 @@
 bl_info = {
     "name": "Jump to Next/Previous Scene",
     "author": "Pablo Vazquez, Dalai Felinto",
-    "version": (0, 2),
-    "blender": (2, 72),
+    "version": (0, 3),
+    "blender": (2, 80),
     "location": "Scene Properties > Scene, or press Ctrl+Shift+Left/Right",
     "description": "Easily jump to the next or previous scenes",
     "category": "Scene"}
@@ -39,7 +39,7 @@ class SCENE_OT_stroll(Operator):
             if scene_id < 0 or scene_id == len(scenes):
                 return self.error()
 
-            bpy.context.screen.scene = scenes[scene_id]
+            bpy.context.window.scene = scenes[scene_id]
         else:
             return self.error()
 
